@@ -1,0 +1,82 @@
+@model FamilyTree.Models.CreateUserViewModel
+@{
+    ViewData["Title"] = "账号管理";
+    var users = ViewData["Users"] as List<FamilyTree.Models.AppUser> ?? new List<FamilyTree.Models.AppUser>();
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0"><i class="bi bi-people-fill me-2"></i>账号管理</h3>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">返回族谱</a>
+    </div>
+
+    @if (TempData["Success"] is string msg)
+    {
+        <div class="alert alert-success">@msg</div>
+    }
+
+    <div class="row g-3">
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header">创建新账号</div>
+                <div class="card-body">
+                    <form asp-action="Users" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label"></label>
+                            <input asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Role" class="form-label"></label>
+                            <select asp-for="Role" class="form-select" asp-items="Html.GetEnumSelectList<FamilyTree.Models.UserRole>()"></select>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100">创建账号</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header">现有账号</div>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>角色</th>
+                            <th>创建时间(UTC)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var user in users)
+                        {
+                            <tr>
+                                <td>@user.Username</td>
+                                <td>@user.Role</td>
+                                <td>@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

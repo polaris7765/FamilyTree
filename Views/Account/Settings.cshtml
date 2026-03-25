@@ -1,0 +1,152 @@
+@model FamilyTree.Models.SystemSettingViewModel
+@{
+    ViewData["Title"] = "系统设置";
+}
+
+<div class="container mt-4" style="max-width: 920px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0"><i class="bi bi-gear-fill me-2"></i>系统设置</h3>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">返回族谱</a>
+    </div>
+
+    @if (TempData["Success"] is string success)
+    {
+        <div class="alert alert-success">@success</div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header">常用配置</div>
+        <div class="card-body">
+            <form asp-action="Settings" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="SiteTitle" class="form-label"></label>
+                        <input asp-for="SiteTitle" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FamilyName" class="form-label"></label>
+                        <input asp-for="FamilyName" class="form-control" placeholder="例如：周氏家谱" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ContactName" class="form-label"></label>
+                        <input asp-for="ContactName" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ContactPhone" class="form-label"></label>
+                        <input asp-for="ContactPhone" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ContactEmail" class="form-label"></label>
+                        <input asp-for="ContactEmail" class="form-control" />
+                    </div>
+                    <div class="col-md-8">
+                        <label asp-for="FamilyOrigin" class="form-label"></label>
+                        <input asp-for="FamilyOrigin" class="form-control" placeholder="例如：安徽合肥周氏宗祠" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="PrimaryColor" class="form-label"></label>
+                        <div class="input-group theme-color-group">
+                            <input asp-for="PrimaryColor" class="form-control" placeholder="#dc3545" />
+                            <input type="color" id="PrimaryColorPicker" class="form-control form-control-color setting-color-picker" value="@Model.PrimaryColor" aria-label="选择主题颜色" />
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-2" id="themePalette">
+                            <button type="button" class="btn btn-sm border rounded-circle theme-swatch" data-color="#dc3545" style="width:26px;height:26px;background:#dc3545;"></button>
+                            <button type="button" class="btn btn-sm border rounded-circle theme-swatch" data-color="#0d6efd" style="width:26px;height:26px;background:#0d6efd;"></button>
+                            <button type="button" class="btn btn-sm border rounded-circle theme-swatch" data-color="#198754" style="width:26px;height:26px;background:#198754;"></button>
+                            <button type="button" class="btn btn-sm border rounded-circle theme-swatch" data-color="#6f42c1" style="width:26px;height:26px;background:#6f42c1;"></button>
+                            <button type="button" class="btn btn-sm border rounded-circle theme-swatch" data-color="#fd7e14" style="width:26px;height:26px;background:#fd7e14;"></button>
+                            <button type="button" class="btn btn-sm border rounded-circle theme-swatch" data-color="#0f766e" style="width:26px;height:26px;background:#0f766e;"></button>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="Announcement" class="form-label"></label>
+                        <textarea asp-for="Announcement" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="DefaultZoomPercent" class="form-label"></label>
+                        <input asp-for="DefaultZoomPercent" class="form-control" type="number" min="50" max="500" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="LayoutOrientation" class="form-label"></label>
+                        <select asp-for="LayoutOrientation" class="form-select">
+                            <option value="@FamilyTree.Models.TreeLayoutOrientation.Vertical">垂直方向（自上而下）</option>
+                            <option value="@FamilyTree.Models.TreeLayoutOrientation.Horizontal">水平方向（自左向右）</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input asp-for="EnableShare" class="form-check-input" />
+                            <label asp-for="EnableShare" class="form-check-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input asp-for="EnablePublicView" class="form-check-input" />
+                            <label asp-for="EnablePublicView" class="form-check-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input asp-for="ShowCardRank" class="form-check-input" />
+                            <label asp-for="ShowCardRank" class="form-check-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input asp-for="ShowCardGeneration" class="form-check-input" />
+                            <label asp-for="ShowCardGeneration" class="form-check-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input asp-for="ShowCardGenerationLevel" class="form-check-input" />
+                            <label asp-for="ShowCardGenerationLevel" class="form-check-label"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger">保存设置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const input = document.getElementById("PrimaryColor");
+            const picker = document.getElementById("PrimaryColorPicker");
+
+            const sync = (color) => {
+                if (!input) return;
+                input.value = color;
+                if (picker) {
+                    picker.value = color;
+                }
+            };
+
+            picker?.addEventListener("input", () => sync(picker.value));
+            input?.addEventListener("input", () => {
+                const value = input.value.trim();
+                if (/^#[0-9a-fA-F]{6}$/.test(value) && picker) {
+                    picker.value = value;
+                }
+            });
+
+            document.querySelectorAll(".theme-swatch").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    sync(btn.dataset.color);
+                });
+            });
+
+            sync(input?.value || picker?.value || "#dc3545");
+        })();
+    </script>
+}
+

@@ -1,0 +1,97 @@
+﻿@inject FamilyTree.Data.FamilyTreeDbContext Db
+@{
+    var familyName = Db.SystemSettings.OrderBy(s => s.Id).Select(s => s.FamilyName).FirstOrDefault() ?? "周氏家谱";
+    var siteTitle = Db.SystemSettings.OrderBy(s => s.Id).Select(s => s.SiteTitle).FirstOrDefault() ?? "族谱管理系统";
+    var primaryColor = Db.SystemSettings.OrderBy(s => s.Id).Select(s => s.PrimaryColor).FirstOrDefault() ?? "#dc3545";
+    var pageTitle = ViewData["Title"]?.ToString() ?? siteTitle;
+    var isFullWidthPage = ViewData["FullWidth"] != null;
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@pageTitle - @familyName</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/familytree.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/FamilyTree.styles.css" asp-append-version="true"/>
+    <style>
+        :root {
+            --brand-color: @primaryColor;
+            --brand-color-dark: @primaryColor;
+        }
+
+        .navbar.bg-danger {
+            background-color: var(--brand-color) !important;
+            background-image: linear-gradient(135deg, var(--brand-color), var(--brand-color-dark));
+        }
+    </style>
+</head>
+<body class="@(isFullWidthPage ? "full-width-page" : string.Empty)">
+<header class="no-print">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-danger">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                族谱管理系统
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                <ul class="navbar-nav">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-white" asp-controller="Account" asp-action="Users">
+                                    <i class="bi bi-people-fill me-1"></i>账号管理
+                                </a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-white" asp-controller="Account" asp-action="Settings">
+                                    <i class="bi bi-gear-fill me-1"></i>系统设置
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item me-2">
+                            <span class="nav-link text-white"><i class="bi bi-person-circle me-1"></i>@User.Identity.Name</span>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-outline-light btn-sm" type="submit">退出登录</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Account" asp-action="Login">登录</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="@(isFullWidthPage ? "" : "container")">
+    <main role="main" class="@(isFullWidthPage ? "pb-0" : "pb-3")">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted no-print">
+    <div class="container">
+        &copy; 2026 - 族谱管理系统
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

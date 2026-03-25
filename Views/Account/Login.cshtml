@@ -1,0 +1,43 @@
+@model FamilyTree.Models.LoginViewModel
+@{
+    ViewData["Title"] = "登录";
+}
+
+<div class="container" style="max-width: 420px; padding-top: 60px;">
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>系统登录</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100">登录</button>
+            </form>
+
+            <div class="alert alert-light mt-3 mb-0 small">
+                默认管理员：admin / 123456
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
